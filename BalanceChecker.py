@@ -1,11 +1,9 @@
 from iota import Iota
 
-
+# The amount of addresses the user wants to generate
 numberOfAddresses = 5
+# The seeds from which the addresses will get generated
 seeds = ["POCTEST", "TGAT"]
-
-
-api = Iota('http://148.251.233.147:14265', b'SEED9GOES9HERE')
 
 
 
@@ -21,7 +19,7 @@ def seedSelector ():
 		print ("Finished!!!")
 
 
-# Generate 5 addresses, starting with index 0.
+
 def addressGenerator(seed):
 		api = Iota('http://148.251.233.147:14265', seed)
 		gna_result = api.get_new_addresses(count=numberOfAddresses)
@@ -45,17 +43,9 @@ def addressBalance(address):
 	balance = gna_result['balances']
 	return (balance[0])
 	
-addresses = ["MII9DNFOSWEJUQAMZPMFKHVWKEERZLOQGBPVLCJWWTJPOBCAVOWNABUJLBJXQSNGOEZQKTCXAVHBDZCIKDLMZYSPWW"]
+
 print ( "Checking balance on the first " + str(numberOfAddresses) + " addresses for " + str(len(seeds)) + " seeds!")
 print ("This can take a while...")		
 seedSelector()
 
-
-
-def nodeInfo():
-	rawInfo = (api.get_node_info())
-	info = rawInfo['latestMilestoneIndex']
-	
-		
-	return info
 
