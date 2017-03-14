@@ -1,28 +1,38 @@
+
+# Imports the PyOTA library
 from iota import Iota
 
-# The amount of addresses the user wants to generate
-numberOfAddresses = 5
-# The seeds from which the addresses will get generated
-seeds = ["POCTEST", "TGAT"]
+
+numberOfAddresses = input("How many addresses should be generated and checked for balance on each seed? ")
+iotaNode = raw_input("""
+To use this script you must connect to a IOTA node. You can use your local node address "http://localhost:14265"
+if you have a full node running or you can connect to a remote node. You can finde remote nodes to connect to on
+http://iotasupport.com/lightwallet.shtml
+
+Please enter a node address to connect to:""")
 
 
+seedFile = open("inputSeeds.txt", "r")
+seeds = seedFile.read().splitlines()
+seedFile.close()
 
+# Will take a list of seeds and calls the addressGenerator function for each seed
 def seedSelector ():
 	x = len(seeds) - 1
 	i = 0
 	while i <= x:
 		seed = seeds[i]
-		print("Seed " + seed + " contains following addresses:")
+		print("Checking seed " + seed + " for balance...")
 		addressGenerator(seed)
 		i += 1
 	else:
 		print ("Finished!!!")
 
 
-
+# Generates addresses of a given seed using the "get_new_addresses()" function
 def addressGenerator(seed):
-		api = Iota('http://148.251.233.147:14265', seed)
-		gna_result = api.get_new_addresses(count=numberOfAddresses)
+		api = Iota(iotaNode, seed) # The iota nodes IP address must always be supplied, even if it actually isn't used in this case.
+		gna_result = api.get_new_addresses(count=numberOfAddresses) # This is the actual function to generate the address. 
 		addresses = gna_result['addresses']
 		total = 0
 		i = 0
@@ -37,8 +47,9 @@ def addressGenerator(seed):
 		else:
 			print ("No balance on those addresses!")
 
+# Sends a request to the IOTA node and gets the current confirmed balance
 def addressBalance(address):
-	api = Iota('http://148.251.233.147:14265')
+	api = Iota(iotaNode)
 	gna_result = api.get_balances(address)
 	balance = gna_result['balances']
 	return (balance[0])
